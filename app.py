@@ -191,8 +191,70 @@ def use_vitamin(vitamin_id):
             remaining = 0
             new_batches.append(b)
     vitamin["batches"] = new_batches
+    store["usageLog"].append({
+        "id": str(uuid.uuid4()),
+        "vitaminId": vitamin["id"],
+        "vitaminName": vitamin["name"],
+        "quantity": quantity,
+        "usedAt": datetime.now().isoformat(timespec="seconds"),
+    })
     storage.save(store)
     return jsonify(serialize_vitamin(vitamin))
+
+
+# ---------- Usage report ----------
+
+PERIOD_LABELS = {
+    "week": "This week",
+    "month": "This month",
+    "year": "This year",
+}
+
+
+def period_start(period, ref):
+    if period == "month":
+        return ref.replace(day=1)
+    if period == "year":
+        return ref.replace(month=1, day=1)
+    return ref - timedelta(days=ref.weekday())  # Monday of this week
+
+
+@app.route("/api/report", methods=["GET"])
+def usage_report():
+    period = request.args.get("period", "week")
+    if period not in PERIOD_LABELS:
+        return jsonify({"error": "period must be week, month, or year"}), 400
+
+    ref = today()
+    start = period_start(period, ref)
+
+    store = storage.load()
+    totals = {}
+    for entry in store["usageLog"]:
+        used_date = datetime.fromisoformat(entry["usedAt"]).date()
+        if start <= used_date <= ref:
+            totals[entry["vitaminName"]] = totals.get(entry["vitaminName"], 0) + entry["quantity"]
+
+    breakdown = sorted(
+        [{"name": name, "quantity": qty} for name, qty in totals.items()],
+        key=lambda r: -r["quantity"],
+    )
+    return jsonify({
+        "period": period,
+        "periodLabel": PERIOD_LABELS[period],
+        "rangeStart": fmt_date(start),
+        "rangeEnd": fmt_date(ref),
+        "breakdown": breakdown,
+        "total": sum(totals.values()),
+    })
+
+
+@app.route("/api/report/reset", methods=["POST"])
+def reset_report():
+    store = storage.load()
+    store["usageLog"] = []
+    storage.save(store)
+    return jsonify({"ok": True})
 
 
 # ---------- Push notifications ----------

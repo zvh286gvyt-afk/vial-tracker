@@ -8,6 +8,11 @@ const restockSheet = document.getElementById("restock-sheet");
 const restockForm = document.getElementById("restock-form");
 let restockTargetId = null;
 
+const reportSheet = document.getElementById("report-sheet");
+const reportBody = document.getElementById("report-body");
+const reportRange = document.getElementById("report-range");
+let currentReportPeriod = "week";
+
 const STATUS_LABEL = {
   ok: "OK",
   expiring_soon: "Order more soon",
@@ -182,6 +187,61 @@ restockForm.addEventListener("submit", async (e) => {
     });
     restockSheet.hidden = true;
     await refresh();
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+// ---------- Usage report ----------
+
+async function loadReport(period) {
+  currentReportPeriod = period;
+  document.querySelectorAll(".period-tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.period === period);
+  });
+
+  const report = await api(`/api/report?period=${period}`);
+  reportRange.textContent = `${report.periodLabel} (${report.rangeStart} to ${report.rangeEnd})`;
+
+  if (!report.breakdown.length) {
+    reportBody.innerHTML = `<div class="report-empty">No vials used ${report.periodLabel.toLowerCase()}.</div>`;
+    return;
+  }
+
+  const rows = report.breakdown.map(r => `
+    <div class="report-row">
+      <span>${escapeHtml(r.name)}</span>
+      <span class="qty">${r.quantity}</span>
+    </div>
+  `).join("");
+
+  reportBody.innerHTML = `
+    ${rows}
+    <div class="report-total"><span>Total</span><span>${report.total}</span></div>
+  `;
+}
+
+document.getElementById("report-btn").addEventListener("click", () => {
+  reportSheet.hidden = false;
+  loadReport(currentReportPeriod).catch(err => alert(err.message));
+});
+
+document.querySelectorAll(".period-tab").forEach(btn => {
+  btn.addEventListener("click", () => loadReport(btn.dataset.period).catch(err => alert(err.message)));
+});
+
+document.getElementById("report-close").addEventListener("click", () => reportSheet.hidden = true);
+reportSheet.addEventListener("click", (e) => { if (e.target === reportSheet) reportSheet.hidden = true; });
+
+document.getElementById("report-reset").addEventListener("click", async () => {
+  const sure = confirm(
+    "This will permanently delete ALL vial usage history recorded to date. " +
+    "This cannot be undone. Are you sure you want to reset the report?"
+  );
+  if (!sure) return;
+  try {
+    await api("/api/report/reset", { method: "POST" });
+    await loadReport(currentReportPeriod);
   } catch (err) {
     alert(err.message);
   }

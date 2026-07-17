@@ -1,4 +1,4 @@
-const CACHE_NAME = "vial-tracker-v1";
+const CACHE_NAME = "vial-tracker-v2";
 const APP_SHELL = [
   "/",
   "/styles.css",

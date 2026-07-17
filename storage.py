@@ -10,6 +10,7 @@ _lock = threading.Lock()
 _DEFAULT_STORE = {
     "vitamins": [],
     "subscriptions": [],
+    "usageLog": [],
 }
 
 
@@ -24,7 +25,10 @@ def load():
     _ensure_file()
     with _lock:
         with open(DATA_FILE, "r") as f:
-            return json.load(f)
+            store = json.load(f)
+    for key, default in _DEFAULT_STORE.items():
+        store.setdefault(key, default)
+    return store
 
 
 def save(store):

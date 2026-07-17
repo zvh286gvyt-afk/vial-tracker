@@ -11,7 +11,10 @@
 <div id="app">
   <header class="topbar">
     <h1>Vial Tracker</h1>
-    <button id="notif-btn" class="icon-btn" title="Enable reminders" hidden>🔔</button>
+    <div class="topbar-actions">
+      <button id="report-btn" class="icon-btn" title="Usage report">📊</button>
+      <button id="notif-btn" class="icon-btn" title="Enable reminders" hidden>🔔</button>
+    </div>
   </header>
 
   <div id="banner" class="banner" hidden></div>
@@ -58,6 +61,23 @@
         <button type="submit" class="btn primary">Add stock</button>
       </div>
     </form>
+  </div>
+
+  <div id="report-sheet" class="sheet-backdrop" hidden>
+    <div class="sheet">
+      <h2>Usage Report</h2>
+      <div class="period-tabs">
+        <button type="button" class="period-tab" data-period="week">Week</button>
+        <button type="button" class="period-tab" data-period="month">Month</button>
+        <button type="button" class="period-tab" data-period="year">Year</button>
+      </div>
+      <p id="report-range" class="report-range"></p>
+      <div id="report-body"></div>
+      <div class="sheet-actions">
+        <button type="button" class="btn secondary" id="report-close">Close</button>
+        <button type="button" class="btn danger" id="report-reset">Reset Report</button>
+      </div>
+    </div>
   </div>
 </div>
 
