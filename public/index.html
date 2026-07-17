@@ -22,6 +22,7 @@
   <main>
     <section id="list"></section>
 
+    <button id="help-fab" class="fab fab-left" aria-label="Help">?</button>
     <button id="add-fab" class="fab" aria-label="Add vitamin">+</button>
   </main>
 
@@ -76,6 +77,45 @@
       <div class="sheet-actions">
         <button type="button" class="btn secondary" id="report-close">Close</button>
         <button type="button" class="btn danger" id="report-reset">Reset Report</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="help-sheet" class="sheet-backdrop" hidden>
+    <div class="sheet help-sheet">
+      <h2>How to Use Vial Tracker</h2>
+
+      <div class="help-scroll">
+        <h3>Adding a vitamin</h3>
+        <p>Tap the <strong>+</strong> button (bottom right). Enter the name, how many days it lasts before expiring (defaults to 28), how many vials you're starting with, and the date you received them.</p>
+
+        <h3>Using vials</h3>
+        <p>Tap <strong>Use 1</strong> on a vitamin's card each time you administer one. It subtracts from your oldest stock first and logs it in the usage report.</p>
+
+        <h3>Restocking</h3>
+        <p>Tap <strong>+ Restock</strong> when new vials arrive. Enter how many and the date received — the app calculates the new expiration automatically.</p>
+
+        <h3>Status colors</h3>
+        <p>
+          <span class="status-pill status-ok">OK</span> plenty of time left &nbsp;·&nbsp;
+          <span class="status-pill status-expiring_soon">Order more soon</span> expires within 7 days &nbsp;·&nbsp;
+          <span class="status-pill status-expired">Expired</span> past the expiration date
+        </p>
+
+        <h3>Notification icons (top right)</h3>
+        <p><span class="help-icon">🔔</span> Reminders are off — tap to turn them on.</p>
+        <p><span class="help-icon">🔔✓</span> Reminders are on. You'll get a push notification 7 days before any vial expires, so you know it's time to order more.</p>
+        <p><span class="help-icon">🔕</span> Notifications are blocked in your phone/browser settings. Enable them in Settings, then reload the app.</p>
+
+        <h3>Usage report</h3>
+        <p>Tap <strong>📊</strong> to see how many vials of each vitamin were used this week, month, or year. <strong>Reset Report</strong> permanently clears that history — it will always ask you to confirm first, since it can't be undone.</p>
+
+        <h3>Deleting a vitamin</h3>
+        <p>Tap <strong>Delete</strong> on a card to remove that vitamin and all its stock records. This also asks for confirmation first.</p>
+      </div>
+
+      <div class="sheet-actions">
+        <button type="button" class="btn primary" id="help-close">Exit</button>
       </div>
     </div>
   </div>

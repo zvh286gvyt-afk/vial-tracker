@@ -211,6 +211,17 @@ main {
   max-width: 560px;
 }
 
+.fab-left {
+  right: auto;
+  left: 24px;
+  background: var(--gray);
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
 .sheet-backdrop {
   position: fixed;
   inset: 0;
@@ -328,4 +339,39 @@ main {
   color: var(--gray);
   padding: 24px 0;
   font-size: 14px;
+}
+
+.help-sheet {
+  max-height: 85vh;
+}
+
+.help-scroll {
+  overflow-y: auto;
+  padding-right: 4px;
+  flex: 1;
+  min-height: 0;
+}
+
+.help-scroll h3 {
+  font-size: 15px;
+  color: var(--green);
+  margin: 16px 0 4px;
+}
+
+.help-scroll h3:first-child {
+  margin-top: 0;
+}
+
+.help-scroll p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 4px;
+  color: var(--text);
+}
+
+.help-icon {
+  display: inline-block;
+  width: 36px;
+  font-size: 16px;
+  white-space: nowrap;
 }

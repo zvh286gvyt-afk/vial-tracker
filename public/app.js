@@ -13,6 +13,8 @@ const reportBody = document.getElementById("report-body");
 const reportRange = document.getElementById("report-range");
 let currentReportPeriod = "week";
 
+const helpSheet = document.getElementById("help-sheet");
+
 const STATUS_LABEL = {
   ok: "OK",
   expiring_soon: "Order more soon",
@@ -149,6 +151,10 @@ document.getElementById("add-fab").addEventListener("click", () => {
   document.getElementById("f-date").value = todayStr();
   addSheet.hidden = false;
 });
+
+document.getElementById("help-fab").addEventListener("click", () => helpSheet.hidden = false);
+document.getElementById("help-close").addEventListener("click", () => helpSheet.hidden = true);
+helpSheet.addEventListener("click", (e) => { if (e.target === helpSheet) helpSheet.hidden = true; });
 
 document.getElementById("add-cancel").addEventListener("click", () => addSheet.hidden = true);
 addSheet.addEventListener("click", (e) => { if (e.target === addSheet) addSheet.hidden = true; });
