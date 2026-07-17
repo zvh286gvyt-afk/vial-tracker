@@ -256,22 +256,46 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
 }
 
+async function updateNotifButton(reg) {
+  if (Notification.permission === "denied") {
+    notifBtn.textContent = "🔕";
+    notifBtn.title = "Notifications blocked — enable them in your browser/phone settings";
+    notifBtn.disabled = true;
+    return;
+  }
+  const sub = await reg.pushManager.getSubscription();
+  notifBtn.disabled = false;
+  if (Notification.permission === "granted" && sub) {
+    notifBtn.textContent = "🔔✓";
+    notifBtn.title = "Reminders enabled";
+  } else {
+    notifBtn.textContent = "🔔";
+    notifBtn.title = "Enable reminders";
+  }
+}
+
 async function setupPush() {
-  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
-
-  const reg = await navigator.serviceWorker.register("/service-worker.js");
-
-  if (Notification.permission === "granted") {
-    const sub = await reg.pushManager.getSubscription();
-    if (sub) return; // already subscribed
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+    notifBtn.hidden = true;
+    return;
   }
 
-  if (Notification.permission === "denied") return;
-
+  const reg = await navigator.serviceWorker.register("/service-worker.js");
   notifBtn.hidden = false;
+  await updateNotifButton(reg);
+
   notifBtn.addEventListener("click", async () => {
+    if (Notification.permission === "denied") {
+      alert("Notifications are blocked for this site. Enable them in your browser/phone settings, then reload the page.");
+      return;
+    }
+
     const permission = await Notification.requestPermission();
+    await updateNotifButton(reg);
     if (permission !== "granted") return;
+
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return; // already subscribed, nothing more to do
 
     const { publicKey } = await api("/api/push/public-key");
     if (!publicKey) {
@@ -283,7 +307,7 @@ async function setupPush() {
       applicationServerKey: urlBase64ToUint8Array(publicKey),
     });
     await api("/api/push/subscribe", { method: "POST", body: JSON.stringify(sub) });
-    notifBtn.textContent = "🔔✓";
+    await updateNotifButton(reg);
   });
 }
 
