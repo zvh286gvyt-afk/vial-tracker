@@ -1,0 +1,64 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Vial Tracker</title>
+<meta name="theme-color" content="#2f6f5e" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="apple-touch-icon" href="/icons/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="stylesheet" href="/styles.css" />
+
+<div id="app">
+  <header class="topbar">
+    <h1>Vial Tracker</h1>
+    <button id="notif-btn" class="icon-btn" title="Enable reminders" hidden>🔔</button>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <main>
+    <section id="list"></section>
+
+    <button id="add-fab" class="fab" aria-label="Add vitamin">+</button>
+  </main>
+
+  <div id="add-sheet" class="sheet-backdrop" hidden>
+    <form id="add-form" class="sheet">
+      <h2>Add Vitamin</h2>
+      <label>Name
+        <input type="text" id="f-name" placeholder="e.g. Vitamin B12" required autofocus />
+      </label>
+      <label>Shelf life (days)
+        <input type="number" id="f-shelf" value="28" min="1" required />
+      </label>
+      <label>Starting quantity
+        <input type="number" id="f-qty" value="0" min="0" required />
+      </label>
+      <label>Date received
+        <input type="date" id="f-date" required />
+      </label>
+      <div class="sheet-actions">
+        <button type="button" class="btn secondary" id="add-cancel">Cancel</button>
+        <button type="submit" class="btn primary">Add</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="restock-sheet" class="sheet-backdrop" hidden>
+    <form id="restock-form" class="sheet">
+      <h2>Restock <span id="restock-name"></span></h2>
+      <label>Quantity received
+        <input type="number" id="r-qty" value="1" min="1" required />
+      </label>
+      <label>Date received
+        <input type="date" id="r-date" required />
+      </label>
+      <div class="sheet-actions">
+        <button type="button" class="btn secondary" id="restock-cancel">Cancel</button>
+        <button type="submit" class="btn primary">Add stock</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/app.js"></script>
