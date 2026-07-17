@@ -33,7 +33,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px 8px;
+  padding: calc(20px + env(safe-area-inset-top)) 20px 8px;
 }
 
 .topbar h1 {
@@ -197,7 +197,7 @@ main {
 .fab {
   position: fixed;
   right: 24px;
-  bottom: 28px;
+  bottom: calc(28px + env(safe-area-inset-bottom));
   width: 56px;
   height: 56px;
   border-radius: 999px;
